@@ -1,10 +1,8 @@
 import discord
 from discord.ext import commands
+import datetime
 
-# Replace 'your_token_here' with your bot's token
-TOKEN = 'BOT TOKEN HERE'
-
-# Replace 'your_channel_id_here' with the ID of the channel you want to forward messages to
+TOKEN = 'TOKEN HERE'
 CHANNEL_ID = Channel ID Here
 
 intents = discord.Intents.default()
@@ -20,10 +18,14 @@ async def on_ready():
 async def on_message(message):
     if message.author == bot.user:
         return
-        
-    if isinstance(message.channel, discord.DMChannel):
 
+    if isinstance(message.channel, discord.DMChannel):
         channel = bot.get_channel(CHANNEL_ID)        
         await channel.send(message.content)
+
+    with open("message_log.txt", "a") as log_file:
+        log_file.write(f"{datetime.datetime.now()}: {message.author.name}: {message.content}\n")
+
+    await bot.process_commands(message)
 
 bot.run(TOKEN)
